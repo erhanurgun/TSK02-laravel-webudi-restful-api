@@ -1,0 +1,216 @@
+{
+	"info": {
+		"_postman_id": "7861da7e-5b33-4a4a-90cf-070b88bb8f4a",
+		"name": "Task Webudi RESTFul API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18545415"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "users.index",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users.show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/users/1bbbb548-838b-3723-b475-86f8e227c70e",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users",
+								"1bbbb548-838b-3723-b475-86f8e227c70e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users.store",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Jiyan CENGİZ",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "jiyooo@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Demo1234*",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "Demo1234*",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "+90 (555) 555 55 55",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/users/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users.update",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Jiyan CENGİZ",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "jiyooo@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Demo1234*",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password_confirmation",
+									"value": "Demo1234*",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "phone",
+									"value": "+90 (555) 555 55 55",
+									"type": "text"
+								},
+								{
+									"key": "_method",
+									"value": "PUT",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/users/1bbbb548-838b-3723-b475-86f8e227c70e",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users",
+								"1bbbb548-838b-3723-b475-86f8e227c70e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users.destroy",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://laravel:8000/api/users/77268582-f8c6-3a87-ba1a-77bbe4beb7fa",
+							"protocol": "http",
+							"host": [
+								"laravel"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users",
+								"77268582-f8c6-3a87-ba1a-77bbe4beb7fa"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
