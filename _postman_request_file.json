@@ -47,7 +47,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8000/api/users/1bbbb548-838b-3723-b475-86f8e227c70e",
+							"raw": "http://localhost:8000/api/users/419ace94-ce79-42d1-8500-79aa7b5ad469",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -56,7 +56,7 @@
 							"path": [
 								"api",
 								"users",
-								"1bbbb548-838b-3723-b475-86f8e227c70e"
+								"419ace94-ce79-42d1-8500-79aa7b5ad469"
 							]
 						}
 					},
@@ -78,12 +78,12 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Jiyan CENGİZ",
+									"value": "Demo Kullanıcı 11",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "jiyooo@gmail.com",
+									"value": "demo11@gmail.com",
 									"type": "text"
 								},
 								{
@@ -98,7 +98,7 @@
 								},
 								{
 									"key": "phone",
-									"value": "+90 (555) 555 55 55",
+									"value": "+90 (555) 555 55 61",
 									"type": "text"
 								}
 							]
@@ -114,6 +114,44 @@
 								"api",
 								"users",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users.avatar",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "h4ckdr0.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/users/avatar/419ace94-ce79-42d1-8500-79aa7b5ad469",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users",
+								"avatar",
+								"419ace94-ce79-42d1-8500-79aa7b5ad469"
 							]
 						}
 					},
@@ -140,7 +178,7 @@
 								},
 								{
 									"key": "email",
-									"value": "jiyooo@gmail.com",
+									"value": "jiyooos@gmail.com",
 									"type": "text"
 								},
 								{
@@ -157,7 +195,7 @@
 								},
 								{
 									"key": "phone",
-									"value": "+90 (555) 555 55 55",
+									"value": "+90 (555) 555 55 15",
 									"type": "text"
 								},
 								{
@@ -168,7 +206,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8000/api/users/1bbbb548-838b-3723-b475-86f8e227c70e",
+							"raw": "http://localhost:8000/api/users/1f9077fe-0617-341e-a082-9a81c5fbeba8",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -177,7 +215,7 @@
 							"path": [
 								"api",
 								"users",
-								"1bbbb548-838b-3723-b475-86f8e227c70e"
+								"1f9077fe-0617-341e-a082-9a81c5fbeba8"
 							]
 						}
 					},
@@ -195,7 +233,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://laravel:8000/api/users/77268582-f8c6-3a87-ba1a-77bbe4beb7fa",
+							"raw": "http://laravel:8000/api/users/7c7015c5-21ca-4834-a7bd-5310a6e08e45",
 							"protocol": "http",
 							"host": [
 								"laravel"
@@ -204,7 +242,55 @@
 							"path": [
 								"api",
 								"users",
-								"77268582-f8c6-3a87-ba1a-77bbe4beb7fa"
+								"7c7015c5-21ca-4834-a7bd-5310a6e08e45"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users.destroy.bulk",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "ids[]",
+									"value": "1bbbb548-838b-3723-b475-86f8e227c70e",
+									"type": "text"
+								},
+								{
+									"key": "ids[]",
+									"value": "4a0e41cc-9abf-3163-8f61-0d43e93b330d",
+									"type": "text"
+								},
+								{
+									"key": "ids[]",
+									"value": "58cc62fa-c326-4de4-82cb-13a7e0b58ab1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://laravel:8000/api/users/destroy/bulk",
+							"protocol": "http",
+							"host": [
+								"laravel"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users",
+								"destroy",
+								"bulk"
 							]
 						}
 					},
