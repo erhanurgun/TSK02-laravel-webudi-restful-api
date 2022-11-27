@@ -24,7 +24,7 @@ class ImageRequest extends FormRequest
     public function rules()
     {
         return [
-            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 
@@ -36,10 +36,9 @@ class ImageRequest extends FormRequest
     public function messages()
     {
         return [
-            'avatar.required' => 'Lütfen bir resim seçiniz.',
-            'avatar.image' => 'Lütfen geçerli bir resim dosyası seçiniz.',
-            'avatar.mimes' => 'Lütfen sadece jpeg, png, jpg, gif, svg uzantılı bir resim dosyası seçiniz.',
-            'avatar.max' => 'Lütfen 2MB\'den küçük bir resim dosyası seçiniz.',
+            'image.required' => 'Lütfen bir resim seçiniz.',
+            'image.mimes' => 'Lütfen sadece jpeg, png, jpg, gif, svg uzantılı bir resim dosyası seçiniz.',
+            'image.max' => 'Lütfen 2MB\'den küçük bir resim dosyası seçiniz.',
         ];
     }
 }

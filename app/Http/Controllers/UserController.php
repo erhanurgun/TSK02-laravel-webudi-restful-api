@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\UserRequest;
 use App\Http\Requests\ImageRequest;
+use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -17,9 +17,16 @@ class UserController extends Controller
      */
     public function index()
     {
+        // page/{number} değeri yoksa 1 değerini alır
+        $page = request()->has('page') ? request('page') : 1;
+        // paginate edilen sayfa da kayıt yoksa
+        if (User::paginate(10)->lastPage() < $page) {
+            return response()->json([
+                'error' => '?page=' . $page . ' sayfasında herhangi bir kayıt bulunamadı!'
+            ], 404);
+        }
         return response()->json([
-            'user_count' => User::count(),
-            'users' => User::all()
+            'users' => User::orderBy('id', 'desc')->paginate(10, ['*'], 'page', $page)
         ], 200);
     }
 
@@ -36,7 +43,7 @@ class UserController extends Controller
         $user = User::create($req);
         $user = User::where('email', $user->email)->first();
         return response()->json([
-            'message' => 'Kullanıcı başarıyla oluşturuldu.',
+            'success' => 'Kullanıcı başarıyla oluşturuldu.',
             'user' => $user
         ], 201);
     }
@@ -53,7 +60,7 @@ class UserController extends Controller
         if ($id) {
             return response()->json(['user' => $id], 200);
         } else {
-            return response()->json(['message' => 'Kullanıcı bulunamadı!'], 404);
+            return response()->json(['error' => 'Kullanıcı bulunamadı!'], 404);
         }
     }
 
@@ -66,16 +73,15 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, $id)
     {
-        $id = User::find($id);
-        if ($id) {
-            $id->update($request->validated());
+        $user = User::find($id);
+        if ($user) {
+            $user->update($request->validated());
             return response()->json([
-                'message' => 'Kullanıcı başarıyla güncellendi.',
-                'user_count' => User::count(),
-                'user' => $id
+                'success' => 'Kullanıcı başarıyla güncellendi.',
+                'user' => $user
             ], 200);
         } else {
-            return response()->json(['message' => 'Kullanıcı bulunamadı!'], 404);
+            return response()->json(['error' => 'Kullanıcı bulunamadı!'], 404);
         }
     }
 
@@ -87,15 +93,18 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $id = User::find($id);
-        if ($id) {
-            $id->delete();
+        $user = User::find($id);
+        if ($user) {
+            if (isset($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $user->delete();
             return response()->json([
-                'message' => 'Kullanıcı başarıyla silindi.',
-                'user' => $id
+                'success' => 'Kullanıcı başarıyla silindi.',
+                'user' => $user
             ], 200);
         } else {
-            return response()->json(['message' => 'Kullanıcı bulunamadı!'], 404);
+            return response()->json(['error' => 'Kullanıcı bulunamadı!'], 404);
         }
     }
 
@@ -109,39 +118,41 @@ class UserController extends Controller
         $ids = $request->ids;
         $users = User::whereIn('id', $ids)->get();
         if ($users && count($users) > 0) {
-            User::whereIn('id', $ids)->delete();
+            foreach ($users as $user) {
+                if (isset($user->avatar)) {
+                    Storage::disk('public')->delete($user->avatar);
+                }
+                $user->delete();
+            }
             return response()->json([
-                'message' => 'Kullanıcı(lar) başarıyla silindi.',
-                'user_count' => User::count(),
-                'users' => User::all()
+                'success' => 'Kullanıcı(lar) başarıyla silindi.',
             ], 200);
         }
-        return response()->json(['message' => 'Kullanıcı(lar) bulunamadı!'], 404);
+        return response()->json(['error' => 'Kullanıcı(lar) bulunamadı!'], 404);
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
      * @param int $id
      * @param \App\Http\Requests\ImageRequest $request
+     * @return \Illuminate\Http\Response
      */
     public function avatar(ImageRequest $request)
     {
         $user = User::find($request->id);
-        $avatar = $request->file('avatar');
-        if ($user && $avatar) {
+        if ($user) {
             if (isset($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
-            $user->avatar = $request->file('avatar')->store('uploads/users', 'public');
+            $user->avatar = $request->file('image')->store('uploads/users', 'public');
             $user->save();
             return response()->json([
-                'message' => 'Kullanıcı avatarı başarıyla güncellendi.',
+                'success' => 'Kullanıcı avatarı başarıyla güncellendi.',
                 'user' => $user
             ], 200);
         } else {
-            return response()->json(['message' => 'Kullanıcı veya avatar bulunamadı!'], 404);
+            return response()->json(['error' => 'Kullanıcı bulunamadı!'], 404);
         }
     }
 }
