@@ -259,7 +259,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "example": "ffc6d76e-0804-4b5c-8608-db0881b34a84"
+                        "example": "ff130212-b3e9-4417-8363-df0848c3abdf"
                     }
                 ],
                 "responses": {
@@ -299,7 +299,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "example": "ffc6d76e-0804-4b5c-8608-db0881b34a84"
+                        "example": "ff130212-b3e9-4417-8363-df0848c3abdf"
                     }
                 ],
                 "requestBody": {
@@ -386,7 +386,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "example": "ffc6d76e-0804-4b5c-8608-db0881b34a84"
+                        "example": "ff130212-b3e9-4417-8363-df0848c3abdf"
                     }
                 ],
                 "responses": {
@@ -447,7 +447,7 @@
                                         },
                                         "example": [
                                             "ffc6d76e-0804-4b5c-8608-db0881b34a84",
-                                            "ffc6d76e-0804-4b5c-8608-db0881b34a84"
+                                            "ff130212-b3e9-4417-8363-df0848c3abdf"
                                         ]
                                     }
                                 },
@@ -493,26 +493,46 @@
                 }
             }
         },
-        "/api/users/change/avatar": {
-            "put": {
+        "/api/users/{id}/avatar": {
+            "post": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "Change avatar user",
                 "description": "Returns user data",
-                "operationId": "changeAvatar",
+                "operationId": "avatar",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "User id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "ff130212-b3e9-4417-8363-df0848c3abdf"
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
-                                "properties": {
-                                    "avatar": {
-                                        "type": "string",
-                                        "example": "ffc6d76e-0804-4b5c-8608-db0881b34a84"
+                                "required": [
+                                    "image"
+                                ],
+                                "allOf": [
+                                    {
+                                        "properties": {
+                                            "image": {
+                                                "description": "Avatar",
+                                                "type": "string",
+                                                "format": "binary"
+                                            }
+                                        },
+                                        "type": "object"
                                     }
-                                },
-                                "type": "object"
+                                ]
                             }
                         }
                     }

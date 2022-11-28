@@ -11,5 +11,5 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('users/search', [UserController::class, 'search'])->name('users.search');
     Route::resource('users', UserController::class);
     Route::delete('users/destroy/bulk', [UserController::class, 'destroyBulk'])->name('users.destroy.bulk');
-    Route::post('users/avatar/{id}', [UserController::class, 'changeAvatar'])->name('users.avatar');
+    Route::post('users/{id}/avatar', [UserController::class, 'avatar'])->name('users.avatar');
 });
