@@ -10,10 +10,33 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+    // swagger get all users
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *      path="/api/users",
+     *      tags={"Users"},
+     *      summary="Get list of users",
+     *      description="Returns list of users",
+     *      operationId="index",
+     *      @OA\Parameter(
+     *          name="page",
+     *          description="Page number",
+     *          required=false,
+     *          in="query",
+     *          @OA\Schema(
+     *              type="integer",
+     *              format="int32"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Not found",
+     *      ),
+     * )
      */
     public function index()
     {
@@ -30,12 +53,6 @@ class UserController extends Controller
         ], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \App\Http\Requests\UserRequest $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(UserRequest $request)
     {
         $req = $request->validated();
@@ -48,12 +65,6 @@ class UserController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $id = User::find($id);
@@ -64,13 +75,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \App\Http\Requests\UserRequest $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(UserRequest $request, $id)
     {
         $user = User::find($id);
@@ -85,12 +89,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $user = User::find($id);
@@ -108,11 +106,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function destroyBulk(Request $request)
     {
         $ids = $request->ids;
@@ -131,13 +124,6 @@ class UserController extends Controller
         return response()->json(['error' => 'Kullanıcı(lar) bulunamadı!'], 404);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @param int $id
-     * @param \App\Http\Requests\ImageRequest $request
-     * @return \Illuminate\Http\Response
-     */
     public function avatar(ImageRequest $request)
     {
         $user = User::find($request->id);
