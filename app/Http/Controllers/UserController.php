@@ -15,59 +15,11 @@ class UserController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/users",
+     *      path="/api/v1/users",
      *      tags={"Users"},
-     *      summary="Get all users",
-     *      description="Returns users data",
+     *      summary="Get list of users",
+     *      description="Returns list of users",
      *      operationId="index",
-     *      @OA\Parameter(name="page", description="Page number", required=false, in="query", example="1",
-     *          @OA\Schema(type="integer")
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="data", type="object"),
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response=404,
-     *          description="Not found",
-     *      ),
-     *      @OA\Response(
-     *          response=500,
-     *          description="Internal Server Error",
-     *          @OA\JsonContent(
-     *               @OA\Property(property="error", type="string"),
-     *          )
-     *      ),
-     * )
-     */
-    public function index()
-    {
-        // page/{number} değeri yoksa 1 değerini alır
-        $page = request()->has('page') ? request('page') : 1;
-        // paginate edilen sayfa da kayıt yoksa
-        if (User::paginate(10)->lastPage() < $page) {
-            return response()->json([
-                'error' => '?page=' . $page . ' sayfasında herhangi bir veri bulunamadı!'
-            ], 404);
-        }
-        return response()->json([
-            'success' => 'Veri(ler) başarıyla listelendi.',
-            'users' => UserResource::collection(User::orderBy('id', 'desc')->paginate(10, ['*'], 'page', $page))
-        ], 200);
-    }
-
-    // swagger search users
-
-    /**
-     * @OA\Get(
-     *      path="/api/users/search",
-     *      tags={"Users"},
-     *      summary="Search users",
-     *      description="Returns users data",
-     *      operationId="search",
      *      @OA\Parameter(name="page", description="Page number", required=false, in="query", example="1",
      *          @OA\Schema(type="integer")
      *      ),
@@ -103,13 +55,13 @@ class UserController extends Controller
      *      ),
      * )
      */
-    public function search(Request $request)
+    public function index(Request $request)
     {
         $page = $request->has('page') ? $request->page : 1;
         $perPage = $request->has('per_page') ? $request->per_page : 10;
         $search = $request->has('search') ? $request->search : '';
         $sort = $request->has('sort') ? $request->sort : 'id';
-        $order = $request->has('order') ? $request->order : 'desc';
+        $order = $request->has('order') ? $request->order : 'asc';
         $columns = ['id', 'name', 'email', 'phone', 'created_at', 'updated_at'];
         $users = User::where(function ($query) use ($search, $columns) {
             foreach ($columns as $column) {
@@ -137,7 +89,7 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     *      path="/api/users",
+     *      path="/api/v1/users",
      *      tags={"Users"},
      *      summary="Store new user",
      *      description="Returns user data",
@@ -190,7 +142,7 @@ class UserController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/users/{id}",
+     *      path="/api/v1/users/{id}",
      *      tags={"Users"},
      *      summary="Get user information",
      *      description="Returns user data",
@@ -228,7 +180,7 @@ class UserController extends Controller
 
     /**
      * @OA\Put(
-     *      path="/api/users/{id}",
+     *      path="/api/v1/users/{id}",
      *      tags={"Users"},
      *      summary="Update user information",
      *      description="Returns user data",
@@ -291,7 +243,7 @@ class UserController extends Controller
 
     /**
      * @OA\Delete(
-     *      path="/api/users/{id}",
+     *      path="/api/v1/users/{id}",
      *      tags={"Users"},
      *      summary="Delete user",
      *      description="Returns user data",
@@ -343,72 +295,11 @@ class UserController extends Controller
         }
     }
 
-    // swagger destroyBulk user
-
-    /**
-     * @OA\Delete(
-     *      path="/api/users/destroy/bulk",
-     *      tags={"Users"},
-     *      summary="Delete bulk user",
-     *      description="Returns user data",
-     *      operationId="destroyBulk",
-     *      @OA\RequestBody(
-     *          required=true,
-     *          @OA\JsonContent(
-     *               @OA\Property(
-     *                  property="ids", type="array",
-     *                  example={"ffc6d76e-0804-4b5c-8608-db0881b34a84", "ff130212-b3e9-4417-8363-df0848c3abdf"},
-     *                  @OA\Items(type="string")),
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="data", type="object"),
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response=404,
-     *          description="Not found",
-     *      ),
-     *      @OA\Response(
-     *          response=500,
-     *          description="Internal Server Error",
-     *          @OA\JsonContent(
-     *               @OA\Property(property="error", type="string"),
-     *          )
-     *      ),
-     * )
-     */
-    public function destroyBulk(Request $request)
-    {
-        try {
-            $ids = $request->ids;
-            $users = User::whereIn('id', $ids)->get();
-            if ($users && count($users) > 0) {
-                foreach ($users as $user) {
-                    if (isset($user->avatar)) {
-                        Storage::disk('public')->delete($user->avatar);
-                    }
-                    $user->delete();
-                }
-                return response()->json([
-                    'success' => 'Veri(ler) başarıyla silindi.',
-                ], 200);
-            }
-            return response()->json(['error' => 'Silmeye çalıştığınız veri(ler) bulunamadı!'], 404);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => "Veri(ler) silinirken bir hata oluştu. Hata: " . $e->getMessage()
-            ], 500);
-        }
-    }
-
     // swagger change avatar user
+
     /**
      * @OA\Post(
-     *      path="/api/users/{id}/avatar",
+     *      path="/api/v1/users/{id}/avatar",
      *      tags={"Users"},
      *      summary="Change avatar user",
      *      description="Returns user data",
@@ -476,6 +367,68 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => "Avatar güncellenirken bir hata oluştu. Hata: " . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // swagger destroyBulk user
+
+    /**
+     * @OA\Delete(
+     *      path="/api/v1/users/destroy/bulk",
+     *      tags={"Users"},
+     *      summary="Delete bulk user",
+     *      description="Returns user data",
+     *      operationId="destroyBulk",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *               @OA\Property(
+     *                  property="ids", type="array",
+     *                  example={"ffc6d76e-0804-4b5c-8608-db0881b34a84", "ff130212-b3e9-4417-8363-df0848c3abdf"},
+     *                  @OA\Items(type="string")),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="data", type="object"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Not found",
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+     *          description="Internal Server Error",
+     *          @OA\JsonContent(
+     *               @OA\Property(property="error", type="string"),
+     *          )
+     *      ),
+     * )
+     */
+    public function destroyBulk(Request $request)
+    {
+        try {
+            $ids = $request->ids;
+            $users = User::whereIn('id', $ids)->get();
+            if ($users && count($users) > 0) {
+                foreach ($users as $user) {
+                    if (isset($user->avatar)) {
+                        Storage::disk('public')->delete($user->avatar);
+                    }
+                    $user->delete();
+                }
+                return response()->json([
+                    'success' => 'Veri(ler) başarıyla silindi.',
+                ], 200);
+            }
+            return response()->json(['error' => 'Silmeye çalıştığınız veri(ler) bulunamadı!'], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => "Veri(ler) silinirken bir hata oluştu. Hata: " . $e->getMessage()
             ], 500);
         }
     }

@@ -13,13 +13,13 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/users": {
+        "/api/v1/users": {
             "get": {
                 "tags": [
                     "Users"
                 ],
-                "summary": "Get all users",
-                "description": "Returns users data",
+                "summary": "Get list of users",
+                "description": "Returns list of users",
                 "operationId": "index",
                 "parameters": [
                     {
@@ -31,6 +31,49 @@
                             "type": "integer"
                         },
                         "example": "1"
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "10"
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sort",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "name"
+                    },
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order",
+                        "required": false,
+                        "schema": {
+                            "type": "enum",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        },
+                        "example": "asc"
                     }
                 ],
                 "responses": {
@@ -142,107 +185,7 @@
                 }
             }
         },
-        "/api/users/search": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Search users",
-                "description": "Returns users data",
-                "operationId": "search",
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "Page number",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "per_page",
-                        "in": "query",
-                        "description": "Number of items per page",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "10"
-                    },
-                    {
-                        "name": "search",
-                        "in": "query",
-                        "description": "Search",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "sort",
-                        "in": "query",
-                        "description": "Sort",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "name"
-                    },
-                    {
-                        "name": "order",
-                        "in": "query",
-                        "description": "Order",
-                        "required": false,
-                        "schema": {
-                            "type": "enum",
-                            "enum": [
-                                "asc",
-                                "desc"
-                            ]
-                        },
-                        "example": "asc"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Not found"
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "error": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/users/{id}": {
+        "/api/v1/users/{id}": {
             "get": {
                 "tags": [
                     "Users"
@@ -426,32 +369,46 @@
                 }
             }
         },
-        "/api/users/destroy/bulk": {
-            "delete": {
+        "/api/v1/users/{id}/avatar": {
+            "post": {
                 "tags": [
                     "Users"
                 ],
-                "summary": "Delete bulk user",
+                "summary": "Change avatar user",
                 "description": "Returns user data",
-                "operationId": "destroyBulk",
+                "operationId": "avatar",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "User id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "ff130212-b3e9-4417-8363-df0848c3abdf"
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
-                                "properties": {
-                                    "ids": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
+                                "required": [
+                                    "image"
+                                ],
+                                "allOf": [
+                                    {
+                                        "properties": {
+                                            "image": {
+                                                "description": "Avatar",
+                                                "type": "string",
+                                                "format": "binary"
+                                            }
                                         },
-                                        "example": [
-                                            "ffc6d76e-0804-4b5c-8608-db0881b34a84",
-                                            "ff130212-b3e9-4417-8363-df0848c3abdf"
-                                        ]
+                                        "type": "object"
                                     }
-                                },
-                                "type": "object"
+                                ]
                             }
                         }
                     }
@@ -493,46 +450,32 @@
                 }
             }
         },
-        "/api/users/{id}/avatar": {
-            "post": {
+        "/api/v1/users/destroy/bulk": {
+            "delete": {
                 "tags": [
                     "Users"
                 ],
-                "summary": "Change avatar user",
+                "summary": "Delete bulk user",
                 "description": "Returns user data",
-                "operationId": "avatar",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "description": "User id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "ff130212-b3e9-4417-8363-df0848c3abdf"
-                    }
-                ],
+                "operationId": "destroyBulk",
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
-                                "required": [
-                                    "image"
-                                ],
-                                "allOf": [
-                                    {
-                                        "properties": {
-                                            "image": {
-                                                "description": "Avatar",
-                                                "type": "string",
-                                                "format": "binary"
-                                            }
+                                "properties": {
+                                    "ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
                                         },
-                                        "type": "object"
+                                        "example": [
+                                            "ffc6d76e-0804-4b5c-8608-db0881b34a84",
+                                            "ff130212-b3e9-4417-8363-df0848c3abdf"
+                                        ]
                                     }
-                                ]
+                                },
+                                "type": "object"
                             }
                         }
                     }

@@ -50,22 +50,22 @@ class UserRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'Ad ve soyad alanı zorunludur.',
-            'name.string' => 'Ad ve soyad alanı metin olmalıdır.',
-            'name.max' => 'Ad ve soyad alanı en fazla 255 karakter olabilir.',
-            'email.required' => 'E-posta alanı zorunludur.',
-            'email.string' => 'E-posta alanı metin olmalıdır.',
-            'email.email' => 'E-posta alanı geçerli bir e-posta adresi olmalıdır.',
-            'email.max' => 'E-posta alanı en fazla 255 karakter olabilir.',
-            'email.unique' => 'Bu e-posta adresi daha önce kullanılmış, lütfen başka bir e-posta adresi deneyiniz.',
-            'password.required' => 'Şifre alanı zorunludur.',
-            'password.string' => 'Şifre alanı metin olmalıdır.',
-            'password.min' => 'Şifre alanı en az 8 karakter olmalıdır.',
-            'password.confirmed' => 'Şifre alanı ile Şifre tekrar alanı eşleşmiyor.',
-            'phone.required' => 'Telefon alanı zorunludur.',
-            'phone.string' => 'Telefon alanı metin olmalıdır.',
-            'phone.regex' => 'Telefon alanı geçerli bir telefon numarası olmalıdır. Örnek: +90 (555) 555 55 55',
-            'phone.unique' => 'Bu telefon numarası daha önce kullanılmış, lütfen başka bir telefon numarası deneyiniz.',
+            'name.required' => 'Ad ve soyad alanı zorunludur!',
+            'name.string' => 'Ad ve soyad alanı metin olmalıdır!',
+            'name.max' => 'Ad ve soyad alanı en fazla 255 karakter olabilir!',
+            'email.required' => 'E-posta alanı zorunludur!',
+            'email.string' => 'E-posta alanı metinsel olmalıdır!',
+            'email.email' => 'Bu e-posta geçerli bir e-posta adresi olmalıdır!',
+            'email.max' => 'E-posta alanı en fazla 255 karakter olabilir!',
+            'email.unique' => 'Bu e-posta adresi daha önce kullanılmış, lütfen başka bir e-posta adresi deneyiniz!',
+            'password.required' => 'Şifre alanı zorunludur!',
+            'password.string' => 'Şifre alanı metinsel olmalıdır!',
+            'password.min' => 'Şifre en az 8 karakter olmalıdır!',
+            'password.confirmed' => 'Şifre ile şifre tekrar alanı eşleşmiyor!',
+            'phone.required' => 'Telefon alanı zorunludur!',
+            'phone.string' => 'Telefon alanı metinsel olmalıdır!',
+            'phone.regex' => 'Bu telefon geçerli bir telefon numarası değil, lütfen +90 (555) 555 55 55 formatında giriniz!',
+            'phone.unique' => 'Bu telefon numarası daha önce kullanılmış, lütfen başka bir telefon numarası deneyiniz!',
         ];
     }
 }
