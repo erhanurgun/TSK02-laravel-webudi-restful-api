@@ -4,7 +4,9 @@
         "dev": "vite",
         "build": "vite build",
         "watch": "vite -- --watch",
-        "seed": "php artisan migrate:fresh --seed"
+        "serve": "php artisan serve",
+        "seed": "php artisan migrate:fresh --seed",
+        "l5": "php artisan l5-swagger:generate"
     },
     "devDependencies": {
         "axios": "^1.1.2",
