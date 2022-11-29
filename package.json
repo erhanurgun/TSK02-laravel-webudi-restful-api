@@ -6,7 +6,8 @@
         "watch": "vite -- --watch",
         "serve": "php artisan serve",
         "seed": "php artisan migrate:fresh --seed",
-        "l5": "php artisan l5-swagger:generate"
+        "l5": "php artisan l5-swagger:generate",
+        "key": "php artisan passport:client --personal"
     },
     "devDependencies": {
         "axios": "^1.1.2",

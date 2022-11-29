@@ -15,7 +15,7 @@ class UserController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/v1/users",
+     *      path="/users",
      *      tags={"Users"},
      *      summary="Get list of users",
      *      description="Returns list of users",
@@ -33,7 +33,7 @@ class UserController extends Controller
      *          @OA\Schema(type="string")
      *      ),
      *      @OA\Parameter(name="order", description="Order", required=false, in="query", example="asc",
-     *          @OA\Schema(type="enum", enum={"asc", "desc"})
+     *          @OA\Schema(type="string", enum={"asc", "desc"})
      *      ),
      *      @OA\Response(
      *          response=200,
@@ -53,6 +53,7 @@ class UserController extends Controller
      *               @OA\Property(property="error", type="string"),
      *          )
      *      ),
+     *     security = {{"bearerAuth": {}}}
      * )
      */
     public function index(Request $request)
@@ -80,7 +81,7 @@ class UserController extends Controller
         }
         return response()->json([
             'success' => 'Veri(ler) başarıyla listelendi.',
-            'found' => $users->total() . ' adet veri bulundu.',
+            'total' => $users->total() . ' adet veri bulundu.',
             'users' => UserResource::collection($users)
         ], 200);
     }
@@ -89,7 +90,7 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     *      path="/api/v1/users",
+     *      path="/users",
      *      tags={"Users"},
      *      summary="Store new user",
      *      description="Returns user data",
@@ -118,6 +119,7 @@ class UserController extends Controller
      *              @OA\Property(property="error", type="string"),
      *          )
      *      ),
+     *     security={{"bearerAuth": {}}}
      * )
      */
     public function store(UserRequest $request)
@@ -142,7 +144,7 @@ class UserController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/api/v1/users/{id}",
+     *      path="/users/{id}",
      *      tags={"Users"},
      *      summary="Get user information",
      *      description="Returns user data",
@@ -161,6 +163,7 @@ class UserController extends Controller
      *          response=404,
      *          description="Not found",
      *      ),
+     *     security={{"bearerAuth": {}}}
      * )
      */
     public function show($id)
@@ -180,7 +183,7 @@ class UserController extends Controller
 
     /**
      * @OA\Put(
-     *      path="/api/v1/users/{id}",
+     *      path="/users/{id}",
      *      tags={"Users"},
      *      summary="Update user information",
      *      description="Returns user data",
@@ -216,6 +219,7 @@ class UserController extends Controller
      *               @OA\Property(property="error", type="string"),
      *          )
      *     ),
+     *     security={{"bearerAuth": {}}}
      * )
      */
     public function update(UserRequest $request, $id)
@@ -243,7 +247,7 @@ class UserController extends Controller
 
     /**
      * @OA\Delete(
-     *      path="/api/v1/users/{id}",
+     *      path="/users/{id}",
      *      tags={"Users"},
      *      summary="Delete user",
      *      description="Returns user data",
@@ -269,6 +273,7 @@ class UserController extends Controller
      *               @OA\Property(property="error", type="string"),
      *          )
      *     ),
+     *     security={{"bearerAuth": {}}}
      * )
      */
     public function destroy($id)
@@ -299,7 +304,7 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     *      path="/api/v1/users/{id}/avatar",
+     *      path="/users/{id}/avatar",
      *      tags={"Users"},
      *      summary="Change avatar user",
      *      description="Returns user data",
@@ -344,6 +349,7 @@ class UserController extends Controller
      *               @OA\Property(property="error", type="string"),
      *          )
      *      ),
+     *     security={{"bearerAuth": {}}}
      * )
      */
     public function avatar(ImageRequest $request)
@@ -375,7 +381,7 @@ class UserController extends Controller
 
     /**
      * @OA\Delete(
-     *      path="/api/v1/users/destroy/bulk",
+     *      path="/users/destroy/bulk",
      *      tags={"Users"},
      *      summary="Delete bulk user",
      *      description="Returns user data",
@@ -407,6 +413,7 @@ class UserController extends Controller
      *               @OA\Property(property="error", type="string"),
      *          )
      *      ),
+     *     security={{"bearerAuth": {}}}
      * )
      */
     public function destroyBulk(Request $request)

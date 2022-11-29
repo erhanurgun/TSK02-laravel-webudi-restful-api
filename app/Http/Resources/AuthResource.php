@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LoginResource extends JsonResource
+class AuthResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,18 +17,18 @@ class LoginResource extends JsonResource
     {
         $tokenCreated = $this->createToken('authToken');
         return [
-            'success' => 'Giriş işlemi başarıyla gerçekleştirildi!',
             'user' => [
                 'id' => $this->id,
                 'name' => $this->name,
                 'email' => $this->email,
                 'phone' => $this->phone,
                 'avatar' => $this->avatar,
+                'created_at' => Carbon::parse($this->created_at)->format('d.m.Y H:i:s'),
             ],
             'token' => [
-                'token_type' => 'Bearer',
-                'expires_at' => Carbon::parse($tokenCreated->token->expires_at)->toDateTimeString(),
-                'access_token' => $tokenCreated->accessToken
+                'type' => 'Bearer',
+                'expires_at' => Carbon::parse($tokenCreated->token->expires_at)->format('d.m.Y H:i:s'),
+                'access_key' => $tokenCreated->accessToken
             ]
         ];
     }

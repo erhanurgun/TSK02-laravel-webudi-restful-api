@@ -10,16 +10,20 @@ class Authenticate extends Middleware
     /**
      * Get the path the user should be redirected to when they are not authenticated.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return string|null
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson()) {
+        if (!$request->expectsJson()) {
             return response()->json([
-                'message' => 'Erişim reddedildi!',
-                'status' => 'error',
-                'code' => 401
+                'error' => [
+                    'token' => 'Token bulunamadı veya geçersiz!',
+                    'status' => [
+                        'message' => 'Bu işlem için gerekli izinlere sahip değilsiniz!',
+                        'code' => 401,
+                    ],
+                ]
             ], 401);
         }
     }
@@ -27,8 +31,8 @@ class Authenticate extends Middleware
     /**
      * Handle an unauthenticated user.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  array  $guards
+     * @param \Illuminate\Http\Request $request
+     * @param array $guards
      * @return void
      *
      * @throws \Illuminate\Http\Exceptions\HttpResponseException
@@ -37,9 +41,13 @@ class Authenticate extends Middleware
     {
         throw new HttpResponseException(
             response()->json([
-                'message' => 'Erişim reddedildi!',
-                'status' => 'error',
-                'code' => 401
+                'error' => [
+                    'token' => 'Token bulunamadı veya geçersiz!',
+                    'status' => [
+                        'message' => 'Bu işlem için gerekli izinlere sahip değilsiniz!',
+                        'code' => 401,
+                    ],
+                ]
             ], 401)
         );
     }

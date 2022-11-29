@@ -15,12 +15,11 @@ class UserSeeder extends Seeder
     public function run()
     {
         \App\Models\User::factory()->create([
-            'name' => 'Erhan ÜRGÜN',
-            'email' => 'urgun.js@gmail.com',
-            'password' => bcrypt('071109014'),
-            'phone' => '+90 (542) 257 06 76',
+            'name' => 'Demo User',
+            'email' => 'demo@urgun.com.tr',
+            'password' => bcrypt('Demo1234!'),
+            'phone' => '+90 (555) 555 55 55',
         ]);
-
         \App\Models\User::factory(10)->create();
     }
 }

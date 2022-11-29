@@ -55,4 +55,10 @@ class User extends Authenticatable
             $model->{$model->getKeyName()} = (string) \Str::uuid();
         });
     }
+
+    // oauth_access_tokens içindeki user_id ile ilişkilendirme
+    public function tokens()
+    {
+        return $this->hasMany('Laravel\Passport\Token');
+    }
 }
