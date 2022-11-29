@@ -414,7 +414,8 @@ class UserController extends Controller
         try {
             $ids = $request->ids;
             $users = User::whereIn('id', $ids)->get();
-            if ($users && count($users) > 0) {
+            $total = count($users);
+            if ($users && $total > 0) {
                 foreach ($users as $user) {
                     if (isset($user->avatar)) {
                         Storage::disk('public')->delete($user->avatar);
@@ -423,6 +424,8 @@ class UserController extends Controller
                 }
                 return response()->json([
                     'success' => 'Veri(ler) başarıyla silindi.',
+                    'total' => $total,
+                    'users' => UserResource::collection($users)
                 ], 200);
             }
             return response()->json(['error' => 'Silmeye çalıştığınız veri(ler) bulunamadı!'], 404);
