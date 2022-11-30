@@ -52,13 +52,28 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
+                                        "success": {
                                             "type": "string",
-                                            "example": "success"
+                                            "example": "Giriş başarıyla gerçekleştirildi."
                                         },
-                                        "message": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
                                             "type": "string",
-                                            "example": "User logged in successfully"
+                                            "example": "E-posta adresi veya şifre hatalı, lütfen kontrol edip tekrar deneyiniz!"
                                         }
                                     },
                                     "type": "object"
@@ -67,18 +82,48 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthenticated",
+                        "description": "Unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "error"
+                                        "error": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "Token bulunamadı veya geçersiz!"
+                                                }
+                                            },
+                                            "type": "object"
                                         },
-                                        "message": {
+                                        "status": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Bu işlem için gerekli izinlere sahip değilsiniz!"
+                                                },
+                                                "code": {
+                                                    "type": "integer",
+                                                    "example": 401
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
                                             "type": "string",
-                                            "example": "Unauthenticated"
+                                            "example": "Girilen bilgilere ait herhangi bir kullanıcı bulunamadı!"
                                         }
                                     },
                                     "type": "object"
@@ -92,13 +137,9 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
+                                        "error": {
                                             "type": "string",
-                                            "example": "error"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The given data was invalid"
+                                            "example": "E-posta adresi veya şifre boş bırakılamaz!"
                                         }
                                     },
                                     "type": "object"
@@ -176,33 +217,12 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
+                                        "success": {
                                             "type": "string",
-                                            "example": "success"
+                                            "example": "Giriş başarıyla gerçekleştirildi."
                                         },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "User registered successfully"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocessable Entity",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "error"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
                                         }
                                     },
                                     "type": "object"
@@ -216,169 +236,9 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
+                                        "error": {
                                             "type": "string",
-                                            "example": "error"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Internal Server Error"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/logout": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Logout user",
-                "description": "Logout user",
-                "operationId": "logout",
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "User logged out successfully"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "error"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/refresh": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Refresh token",
-                "description": "Refresh token",
-                "operationId": "refresh",
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Token refreshed successfully"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "error"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/me": {
-            "get": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "User profile",
-                "description": "User profile",
-                "operationId": "profile",
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "success"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "User profile"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "error"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated"
+                                            "example": "Kullanıcı kaydı oluşturulurken bir hata oluştu. Hata: SQLSTATE[23000]: Integrity constraint violation: ..."
                                         }
                                     },
                                     "type": "object"
@@ -433,7 +293,15 @@
                         "description": "Sort",
                         "required": false,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                                "id",
+                                "name",
+                                "email",
+                                "phone",
+                                "created_at",
+                                "updated_at"
+                            ]
                         },
                         "example": "name"
                     },
@@ -459,7 +327,52 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "data": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "Veri(ler) başarıyla listelendi."
+                                        },
+                                        "total": {
+                                            "type": "string",
+                                            "example": "1 adet veri bulundu."
+                                        },
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/User"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "Token bulunamadı veya geçersiz!"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Bu işlem için gerekli izinlere sahip değilsiniz!"
+                                                },
+                                                "code": {
+                                                    "type": "integer",
+                                                    "example": 401
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },
@@ -469,7 +382,20 @@
                         }
                     },
                     "404": {
-                        "description": "Not found"
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Veri bulunamadı!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error",
@@ -478,7 +404,8 @@
                                 "schema": {
                                     "properties": {
                                         "error": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Veriler listelenirken bir hata oluştu."
                                         }
                                     },
                                     "type": "object"
@@ -505,26 +432,33 @@
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Erhan ÜRGÜN"
+                                        "example": "Jiyooo"
                                     },
                                     "email": {
                                         "type": "string",
-                                        "example": "erhan@urgun.com.tr"
+                                        "format": "email",
+                                        "example": "demo@urgun.com.tr"
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "Demo1234!"
+                                        "example": "12345678"
                                     },
                                     "password_confirmation": {
                                         "type": "string",
-                                        "example": "Demo1234!"
+                                        "example": "12345678"
                                     },
                                     "phone": {
                                         "type": "string",
-                                        "example": "+90 (542) 257 06 76"
+                                        "example": "+90 (555) 555 55 55"
                                     }
                                 },
                                 "type": "object"
@@ -539,7 +473,78 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "data": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "Veri başarıyla kaydedildi."
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "Token bulunamadı veya geçersiz!"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Bu işlem için gerekli izinlere sahip değilsiniz!"
+                                                },
+                                                "code": {
+                                                    "type": "integer",
+                                                    "example": 401
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "İsim alanı zorunludur."
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "E-posta alanı zorunludur."
+                                                },
+                                                "password": {
+                                                    "type": "string",
+                                                    "example": "Şifre alanı zorunludur."
+                                                },
+                                                "phone": {
+                                                    "type": "string",
+                                                    "example": "Telefon alanı zorunludur."
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },
@@ -555,7 +560,8 @@
                                 "schema": {
                                     "properties": {
                                         "error": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Kullanıcı kaydı oluşturulurken bir hata oluştu. Hata: SQLSTATE[23000]: Integrity constraint violation: ..."
                                         }
                                     },
                                     "type": "object"
@@ -576,7 +582,7 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "Get user information",
+                "summary": "Get user by id",
                 "description": "Returns user data",
                 "operationId": "show",
                 "parameters": [
@@ -586,9 +592,10 @@
                         "description": "User id",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
                         },
-                        "example": "ff130212-b3e9-4417-8363-df0848c3abdf"
+                        "example": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
                     }
                 ],
                 "responses": {
@@ -598,7 +605,45 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "data": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "Veri başarıyla listelendi."
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "Token bulunamadı veya geçersiz!"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Bu işlem için gerekli izinlere sahip değilsiniz!"
+                                                },
+                                                "code": {
+                                                    "type": "integer",
+                                                    "example": 401
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },
@@ -608,7 +653,20 @@
                         }
                     },
                     "404": {
-                        "description": "Not found"
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Aradığınız ID ile ilgili herhangi bir veri bulunamadı!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -675,7 +733,45 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "data": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "Veri başarıyla güncellendi."
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "Token bulunamadı veya geçersiz!"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Bu işlem için gerekli izinlere sahip değilsiniz!"
+                                                },
+                                                "code": {
+                                                    "type": "integer",
+                                                    "example": 401
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },
@@ -685,16 +781,56 @@
                         }
                     },
                     "404": {
-                        "description": "Not found"
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
+                        "description": "Not Found",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "error": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Aradığınız ID ile ilgili herhangi bir veri bulunamadı!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Veri kaydı güncellenirken bir hata oluştu. Hata: The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Ad alanı boş bırakılamaz!"
+                                                    }
+                                                },
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "E-posta alanı boş bırakılamaz!"
+                                                    }
+                                                },
+                                                "password": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Şifre alanı boş bırakılamaz!"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -735,7 +871,45 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "data": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "Veri başarıyla silindi."
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "Token bulunamadı veya geçersiz!"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Bu işlem için gerekli izinlere sahip değilsiniz!"
+                                                },
+                                                "code": {
+                                                    "type": "integer",
+                                                    "example": 401
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },
@@ -745,7 +919,20 @@
                         }
                     },
                     "404": {
-                        "description": "Not found"
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Aradığınız ID ile ilgili herhangi bir veri bulunamadı!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error",
@@ -754,7 +941,8 @@
                                 "schema": {
                                     "properties": {
                                         "error": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Veri silinirken bir hata oluştu. Hata: SQLSTATE[23000]: Integrity constraint violation: ..."
                                         }
                                     },
                                     "type": "object"
@@ -781,7 +969,7 @@
                 "parameters": [
                     {
                         "name": "id",
-                        "in": "query",
+                        "in": "path",
                         "description": "User id",
                         "required": true,
                         "schema": {
@@ -795,21 +983,13 @@
                     "content": {
                         "multipart/form-data": {
                             "schema": {
-                                "required": [
-                                    "image"
-                                ],
-                                "allOf": [
-                                    {
-                                        "properties": {
-                                            "image": {
-                                                "description": "Avatar",
-                                                "type": "string",
-                                                "format": "binary"
-                                            }
-                                        },
-                                        "type": "object"
+                                "properties": {
+                                    "image": {
+                                        "type": "file",
+                                        "format": "binary"
                                     }
-                                ]
+                                },
+                                "type": "object"
                             }
                         }
                     }
@@ -821,7 +1001,45 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "data": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "Veri başarıyla güncellendi."
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "Token bulunamadı veya geçersiz!"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Bu işlem için gerekli izinlere sahip değilsiniz!"
+                                                },
+                                                "code": {
+                                                    "type": "integer",
+                                                    "example": 401
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },
@@ -831,7 +1049,20 @@
                         }
                     },
                     "404": {
-                        "description": "Not found"
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Aradığınız ID ile ilgili herhangi bir veri bulunamadı!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error",
@@ -840,7 +1071,8 @@
                                 "schema": {
                                     "properties": {
                                         "error": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Veri güncellenirken bir hata oluştu. Hata: SQLSTATE[23000]: Integrity constraint violation: ..."
                                         }
                                     },
                                     "type": "object"
@@ -893,7 +1125,45 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "data": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "Veri(ler) başarıyla silindi."
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "Token bulunamadı veya geçersiz!"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Bu işlem için gerekli izinlere sahip değilsiniz!"
+                                                },
+                                                "code": {
+                                                    "type": "integer",
+                                                    "example": 401
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },
@@ -903,7 +1173,20 @@
                         }
                     },
                     "404": {
-                        "description": "Not found"
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Silmeye çalıştığınız veri(ler) bulunamadı!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error",
@@ -912,7 +1195,8 @@
                                 "schema": {
                                     "properties": {
                                         "error": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Veri(ler) silinirken bir hata oluştu. Hata: SQLSTATE[23000]: Integrity constraint violation: ..."
                                         }
                                     },
                                     "type": "object"
@@ -930,6 +1214,39 @@
         }
     },
     "components": {
+        "schemas": {
+            "User": {
+                "title": "User model",
+                "description": "User model",
+                "properties": {
+                    "name": {
+                        "title": "name",
+                        "description": "enter name",
+                        "type": "string",
+                        "example": "Demo User"
+                    },
+                    "email": {
+                        "title": "email",
+                        "description": "enter email",
+                        "type": "string",
+                        "example": "demo@urgun.com.tr"
+                    },
+                    "password": {
+                        "title": "password",
+                        "description": "enter password",
+                        "type": "string",
+                        "example": "Demo1234!"
+                    },
+                    "phone": {
+                        "title": "phone",
+                        "description": "enter phone",
+                        "type": "string",
+                        "example": "+90 (555) 555 55 55"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",

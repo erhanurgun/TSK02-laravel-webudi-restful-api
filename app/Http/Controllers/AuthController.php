@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\AuthResource;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -15,35 +14,55 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/auth/login",
-     *     tags={"Auth"},
-     *     summary="Login user",
-     *     description="Login user",
-     *     operationId="login",
-     *     @OA\Parameter(name="email", in="query", description="Email", required=true, example="demo@urgun.com.tr", @OA\Schema(type="string")),
-     *     @OA\Parameter(name="password", in="query", description="Password", required=true, example="Demo1234!", @OA\Schema(type="string")),
-     *     @OA\Response(
+     *      path="/auth/login",
+     *      tags={"Auth"},
+     *      summary="Login user",
+     *      description="Login user",
+     *      operationId="login",
+     *      @OA\Parameter(name="email", in="query", description="Email", required=true, example="demo@urgun.com.tr", @OA\Schema(type="string")),
+     *      @OA\Parameter(name="password", in="query", description="Password", required=true, example="Demo1234!", @OA\Schema(type="string")),
+     *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
      *          @OA\JsonContent(
-     *              @OA\Property(property="status", type="string", example="success"),
-     *              @OA\Property(property="message", type="string", example="User logged in successfully"),
+     *              @OA\Property(property="success", type="string", example="Giriş başarıyla gerçekleştirildi."),
+     *              @OA\Property(property="user", ref="#/components/schemas/User"),
      *          ),
      *     ),
      *     @OA\Response(
-     *          response=401,
-     *          description="Unauthenticated",
+     *          response=400,
+     *          description="Bad request",
      *          @OA\JsonContent(
-     *              @OA\Property(property="status", type="string", example="error"),
-     *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+     *              @OA\Property(property="error", type="string", example="E-posta adresi veya şifre hatalı, lütfen kontrol edip tekrar deneyiniz!"),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *     response=401,
+     *     description="Unauthorized",
+     *          @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="error", type="object",
+     *                  @OA\Property(property="token", type="string", example="Token bulunamadı veya geçersiz!")
+     *              ),
+     *              @OA\Property(
+     *                  property="status", type="object",
+     *                  @OA\Property(property="message", type="string", example="Bu işlem için gerekli izinlere sahip değilsiniz!"),
+     *                  @OA\Property(property="code", type="integer", example=401)
+     *              ),
+     *          ),
+     *     ),
+     *     @OA\Response(
+     *          response=404,
+     *          description="Not Found",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="error", type="string", example="Girilen bilgilere ait herhangi bir kullanıcı bulunamadı!"),
      *          ),
      *     ),
      *     @OA\Response(
      *          response=422,
      *          description="Unprocessable Entity",
      *          @OA\JsonContent(
-     *              @OA\Property(property="status", type="string", example="error"),
-     *              @OA\Property(property="message", type="string", example="The given data was invalid"),
+     *              @OA\Property(property="error", type="string", example="E-posta adresi veya şifre boş bırakılamaz!"),
      *          ),
      *     ),
      * )
@@ -55,6 +74,7 @@ class AuthController extends Controller
             // check the request if the use email and password is valid and verified
             $user = User::where('email', $request->email)->first();
             if ($user && Hash::check($request->password, $user->password)) {
+                auth()->login($user, true);
                 return response()->json([
                     'success' => 'Giriş işlemi başarıyla gerçekleştirildi!',
                     'data' => new AuthResource($user),
@@ -62,7 +82,7 @@ class AuthController extends Controller
             } else {
                 return response()->json([
                     'message' => 'E-posta adresi veya şifre hatalı, lütfen kontrol edip tekrar deneyiniz!',
-                ], 401);
+                ], 400);
             }
         } else {
             return response()->json(['message' => 'E-posta adresi veya şifre boş bırakılamaz!'], 422);
@@ -87,24 +107,18 @@ class AuthController extends Controller
      *          response=200,
      *          description="Successful operation",
      *          @OA\JsonContent(
-     *              @OA\Property(property="status", type="string", example="success"),
-     *              @OA\Property(property="message", type="string", example="User registered successfully"),
-     *          ),
-     *     ),
-     *     @OA\Response(
-     *          response=422,
-     *          description="Unprocessable Entity",
-     *          @OA\JsonContent(
-     *               @OA\Property(property="status", type="string", example="error"),
-     *               @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *              @OA\Property(property="success", type="string", example="Giriş başarıyla gerçekleştirildi."),
+     *              @OA\Property(property="user", ref="#/components/schemas/User"),
      *          ),
      *     ),
      *     @OA\Response(
      *          response=500,
      *          description="Internal Server Error",
      *          @OA\JsonContent(
-     *              @OA\Property(property="status", type="string", example="error"),
-     *              @OA\Property(property="message", type="string", example="Internal Server Error"),
+     *              @OA\Property(
+     *                  property="error", type="string",
+     *                  example="Kullanıcı kaydı oluşturulurken bir hata oluştu. Hata: SQLSTATE[23000]: Integrity constraint violation: ..."
+     *              ),
      *          ),
      *     ),
      * )
@@ -116,10 +130,11 @@ class AuthController extends Controller
             $request->merge(['password' => Hash::make($request->password)]);
             $user = User::create($request->all());
             $user = User::where('email', $user->email)->first();
+            auth()->login($user, true);
             return response()->json([
                 'success' => 'Kullanıcı kaydı başarıyla oluşturuldu.',
                 'data' => new AuthResource($user)
-            ], 201);
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => "Kullanıcı kaydı oluşturulurken bir hata oluştu. Hata: " . $e->getMessage()
@@ -129,31 +144,6 @@ class AuthController extends Controller
 
     // logout user
 
-    /**
-     * @OA\Post(
-     *     path="/auth/logout",
-     *     tags={"Auth"},
-     *     summary="Logout user",
-     *     description="Logout user",
-     *     operationId="logout",
-     *     @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="status", type="string", example="success"),
-     *              @OA\Property(property="message", type="string", example="User logged out successfully"),
-     *          ),
-     *     ),
-     *     @OA\Response(
-     *          response=401,
-     *          description="Unauthenticated",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="status", type="string", example="error"),
-     *              @OA\Property(property="message", type="string", example="Unauthenticated"),
-     *          ),
-     *     ),
-     * )
-     */
     public function logout()
     {
         //
@@ -161,31 +151,6 @@ class AuthController extends Controller
 
     // refresh token
 
-    /**
-     * @OA\Post(
-     *     path="/auth/refresh",
-     *     tags={"Auth"},
-     *     summary="Refresh token",
-     *     description="Refresh token",
-     *     operationId="refresh",
-     *     @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="status", type="string", example="success"),
-     *              @OA\Property(property="message", type="string", example="Token refreshed successfully"),
-     *          ),
-     *     ),
-     *     @OA\Response(
-     *          response=401,
-     *          description="Unauthenticated",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="status", type="string", example="error"),
-     *              @OA\Property(property="message", type="string", example="Unauthenticated"),
-     *          ),
-     *     ),
-     * )
-     */
     public function refresh()
     {
         //
@@ -193,31 +158,6 @@ class AuthController extends Controller
 
     // user profile
 
-    /**
-     * @OA\Get(
-     *     path="/auth/me",
-     *     tags={"Auth"},
-     *     summary="User profile",
-     *     description="User profile",
-     *     operationId="profile",
-     *     @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="status", type="string", example="success"),
-     *              @OA\Property(property="message", type="string", example="User profile"),
-     *          ),
-     *     ),
-     *     @OA\Response(
-     *          response=401,
-     *          description="Unauthenticated",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="status", type="string", example="error"),
-     *              @OA\Property(property="message", type="string", example="Unauthenticated"),
-     *          ),
-     *     ),
-     * )
-     */
     public function profile()
     {
         //

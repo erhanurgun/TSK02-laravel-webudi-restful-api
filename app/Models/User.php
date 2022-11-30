@@ -8,9 +8,37 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
+/**
+ * Class User.
+ * @OA\Schema(title="User model", description="User model")
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    /**
+     * @OA\Property(title="name", description="enter name", example="Demo User")
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * @OA\Property(title="email", description="enter email", example="demo@urgun.com.tr")
+     * @var string
+     */
+    protected $email;
+
+    /**
+     * @OA\Property(title="password", description="enter password", example="Demo1234!")
+     * @var string
+     */
+    protected $password;
+
+    /**
+     * @OA\Property(title="phone", description="enter phone", example="+90 (555) 555 55 55")
+     * @var string
+     */
+    protected $phone;
 
     /**
      * The attributes that are mass assignable.
@@ -52,13 +80,7 @@ class User extends Authenticatable
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->{$model->getKeyName()} = (string) \Str::uuid();
+            $model->{$model->getKeyName()} = (string)\Str::uuid();
         });
-    }
-
-    // oauth_access_tokens içindeki user_id ile ilişkilendirme
-    public function tokens()
-    {
-        return $this->hasMany('Laravel\Passport\Token');
     }
 }

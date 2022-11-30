@@ -7,10 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class UserResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @var array<string, string>
      */
     public function toArray($request)
     {
@@ -26,4 +23,6 @@ class UserResource extends JsonResource
             'updated_at' => $this->updated_at,
         ];
     }
+
+
 }
