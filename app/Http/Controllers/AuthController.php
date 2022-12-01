@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\AuthResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
@@ -160,6 +161,16 @@ class AuthController extends Controller
 
     public function profile()
     {
-        //
+        // giriş yapmış kullanıcıyı döndürür
+        if (auth()->check()) {
+            return response()->json([
+                'success' => 'Kullanıcı bilgileri başarıyla getirildi.',
+                'data' => new UserResource(auth()->user())
+            ], 200);
+        } else {
+            return response()->json([
+                'error' => 'Kullanıcı bilgileri getirilemedi. Lütfen tekrar giriş yapınız!'
+            ], 401);
+        }
     }
 }

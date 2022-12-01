@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SpotifyController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -16,5 +17,8 @@ Route::group(['prefix' => env('API_VERSION')], function () {
         Route::delete('users/destroy/bulk', 'destroyBulk')->name('users.destroy.bulk');
         Route::post('users/{id}/avatar', 'avatar')->name('users.avatar');
         Route::resource('users', UserController::class);
+    });
+    Route::group(['controller' => SpotifyController::class], function () {
+        Route::get('spotify', 'index')->name('spotify.index');
     });
 });
