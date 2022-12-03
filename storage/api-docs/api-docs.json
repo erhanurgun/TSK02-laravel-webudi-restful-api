@@ -249,6 +249,43 @@
                 }
             }
         },
+        "/spotify/tracks": {
+            "get": {
+                "tags": [
+                    "Spotify"
+                ],
+                "summary": "Get track list",
+                "description": "Get track list",
+                "operationId": "trackList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "href": {
+                                                    "type": "string",
+                                                    "example": "https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M/tracks?offset=0&limit=100&market=TR"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "tags": [

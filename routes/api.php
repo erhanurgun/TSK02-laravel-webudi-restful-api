@@ -9,16 +9,17 @@ Route::group(['prefix' => env('API_VERSION')], function () {
     Route::group(['controller' => AuthController::class, 'prefix' => 'auth'], function () {
         Route::post('register', 'register')->name('auth.register');
         Route::post('refresh', 'refresh')->name('auth.refresh');
+        Route::get('profile', 'profile')->name('auth.profile');
         Route::post('logout', 'logout')->name('auth.logout');
         Route::post('login', 'login')->name('auth.login');
-        Route::get('me', 'profile')->name('auth.me');
     });
     Route::group(['controller' => UserController::class, 'middleware' => 'auth:api'], function () {
         Route::delete('users/destroy/bulk', 'destroyBulk')->name('users.destroy.bulk');
         Route::post('users/{id}/avatar', 'avatar')->name('users.avatar');
-        Route::resource('users', UserController::class);
+        Route::apiResource('users', UserController::class)->except(['create', 'edit']);
     });
     Route::group(['controller' => SpotifyController::class], function () {
-        Route::get('spotify', 'index')->name('spotify.index');
+        Route::get('spotify/tracks', 'trackList')->name('spotify.tracks');
+        Route::get('spotify/profile', 'profile')->name('spotify.profile');
     });
 });
