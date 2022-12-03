@@ -23,6 +23,23 @@ DB_PORT=
 DB_DATABASE=
 DB_USERNAME=
 DB_PASSWORD=
+
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_FROM_ADDRESS="demo@urgun.com.tr"
+
+# https://laravel.com/docs/9.x/passport#creating-a-personal-access-client
+PASSPORT_PERSONAL_ACCESS_CLIENT_ID="client-id-value"
+PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET="unhashed-client-secret-value"
+
+SPOTIFY_SCOPES="user-read-private user-read-email"
+SPOTIFY_CLIENT_ID="client-id-value"
+SPOTIFY_USER_NAME="user-name-value"
+SPOTIFY_PLAYLIST_ID="playlist-id-value"
+SPOTIFY_CLIENT_SECRET="unhashed-client-secret-value"
 ```
 
 
